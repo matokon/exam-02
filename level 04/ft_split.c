@@ -1,102 +1,91 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mokon <mokon@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 21:00:20 by e                 #+#    #+#             */
-/*   Updated: 2025/03/26 15:16:27 by mokon            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-int count_word(const char *s)
+int words_counter(char *str)
 {
-	int count = 0;
-	int i = 0;
-
-	while (s[i])
-	{
-		while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')
-			i++;
-		if (s[i])
-		{
-			count++;
-			while (s[i] && s[i] != ' ' && s[i] != '\t' && s[i] != '\n')
-				i++;
-		}
-	}
-	return (count);
+    int words = 0;
+    int i = 0;
+    while(str[i])
+    {
+        while(str[i] == ' ' || str[i] == '\t')
+        {
+            i++;
+        }
+        if(str[i] != ' ' && str[i] != '\t' && str[i])
+        {
+            words++;
+            while(str[i] != ' ' && str[i] != '\t' && str[i])
+                i++;
+        }
+    }
+    return words;
 }
 
 char *extract(char *str, int *c)
 {
-	int a = *c;
-	char *extract1;
-	int len = 0;
-	int b = 0;
-	while (str[a] == ' ')
+    int a = *c;
+    int b = 0;
+    int len = 0;
+    char *extract1;
+    while (str[a] == ' ')
 		a++;
 	*c = a;
-	while (str[*c] != ' ' && str[*c])
-	{
-		(*c)++;
-		len++;
-	}
-	extract1 = (char *)malloc(sizeof(char *) * (len + 1));
-	if(!extract1)
-		return NULL;
-	while (len--)
-	{
-		extract1[b] = str[a];
-		a++;
-		b++;
-	}
-	extract1[b] = '\0';
-	return extract1;
+    while(str[*c] != ' ' && str[*c])
+    {
+        (*c)++;
+        len++;
+    }
+        
+    extract1 = (char *)malloc(sizeof(char *) * (len + 1));
+    if(!extract1)
+        return NULL;
+    while(len--)
+    {
+        extract1[b] = str[a];
+        a++;
+        b++;
+    }
+    extract1[b] = '\0';
+    return extract1;
 }
+
 
 char    **ft_split(char *str)
 {
-	if(!str)
-		return NULL;
-	int a = 0;
-	int index = 0;
-	int words = count_word(str);
-	char **strings;
-	strings = (char **)malloc(sizeof(char*) * (words + 1));
-	if(!strings)
-		return NULL;
-	while (a < words)
-	{
-		strings[a] = extract(str, &index);
-		if (!strings[a])
+    int words = 0;
+    int index = 0;
+    int a = 0;
+    char **str_table;
+    if(!str)
+        return NULL;
+    words = words_counter(str);
+    str_table = (char **)malloc(sizeof(char *) * (words + 1));
+    if(!str_table)
+        return NULL;
+    while(a < words)
+    {
+        str_table[a] = extract(str, &index);
+        if(!str_table[a])
         {
-            while (a >= 0)
-                free(strings[a--]);
-            free(strings);
-            return (NULL);
+            while(a >= 0)
+                free(str_table[a--]);
+            free(str_table);
+            return NULL;
         }
-		a++;
-	}
-	strings[a] = "\0";
-	return strings;
+        a++;
+    }
+    str_table[a] = "\0";
+    return str_table;
 }
 
 int main()
 {
-	char *test = "sero sero seor soer ";
-	char **a = ft_split(test);
-	int j = 0; 
-	while(j < 5)
-	{
-		printf("%s", a[j]);
-		printf(" ");
-		j++;
-	}
-	return 0;
+    int i = 0;
+    char *str = "     word1 word2 word3 word4     ";
+    char **a = ft_split(str);
+    while(a[i])
+    {
+        printf("%s", a[i]);
+        i++;
+    }
 }
