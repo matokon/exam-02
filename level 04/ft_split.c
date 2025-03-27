@@ -20,7 +20,7 @@ int words_counter(char *str)
     }
     return words;
 }
-
+ 
 char *extract(char *str, int *c)
 {
     int a = *c;
